@@ -7,3 +7,7 @@ This project represents an implementation of the general relativistic Cowling ap
 The software is developed using the python programming language.
 
 # Getting Started
+
+# Citations
+
+If you found this project to be useful in academic work, please cite it using the following references:
