@@ -16,7 +16,7 @@ If you found this project to be useful in academic work, please cite it using th
 
 ```bibtex
 @UNPUBLISHED{interface_paper,
-       author = {{Counsell}, A and {Gittins}, F. and  {Andersson}, N. and {Tews}, I.},
+       author = {{Counsell}, A.~R. and {Gittins}, F. and  {Andersson}, N. and {Tews}, I.},
         title = "{Interface modes in inspiralling neutron stars: A gravitational-wave probe of first-order phase transitions}",
          note = {in preparation},
          year = 2025
