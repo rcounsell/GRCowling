@@ -2,13 +2,15 @@
 
 This project represents an implementation of the general relativistic Cowling approximation in neutron-star seismology. It was developed to support <a href="https://academic.oup.com/mnras/article/536/2/1967/7920787?login=false"> Mon. Not. R. Astron. Soc. 536, 1967 (2025)</a> and other work in preparation.
 
-# Installation
+## Installation
 
 The software is developed using the python programming language.
 
-# Getting Started
+## Getting Started
 
-# Citations
+General use of this software is demonstrated in the ModeSolver.py file.
+
+## Citations
 
 If you found this project to be useful in academic work, please cite it using the following references:
 
