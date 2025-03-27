@@ -320,7 +320,7 @@ class Star:
                           args=(omega_guess,), t_eval=xs,
                           rtol=1e-10, atol=1e-10
                           )
-        print(sol_1.success, sol_1.message)
+        #print(sol_1.success, sol_1.message)
         
         # Linearly independent solution 2
         z_1=1
@@ -337,7 +337,7 @@ class Star:
                           args=(omega_guess,), t_eval=xs,
                           rtol=1e-10, atol=1e-10
                           )
-        print(sol_2.success, sol_2.message)
+        #print(sol_2.success, sol_2.message)
         
         P = np.column_stack((sol_1.y[:, -1], -sol_2.y[:, -1]))
 
@@ -412,7 +412,7 @@ class mode:
                           dense_output=True,
                           rtol=1e-10, atol=1e-10
                           )
-        print(sol_1.success, sol_1.message)
+        #print(sol_1.success, sol_1.message)
         
         # Linearly independent solution 2
         z_1=1
@@ -429,7 +429,7 @@ class mode:
                           dense_output=True,
                           rtol=1e-10, atol=1e-10
                           )
-        print(sol_2.success, sol_2.message)
+        #print(sol_2.success, sol_2.message)
         
         P_tilde = np.column_stack((sol_1.y[:, -1], -sol_2.y[:, -1]))
         P_tilde[0, :] = [0,self.star.R**3]
@@ -567,19 +567,39 @@ DTD = 2/3*k2/(C**5)
 print('\u039B = {}'.format(DTD))
 
 
-#Plot the spectrum. A mode corresponds to a zero
-a=np.linspace(0.4,1,16) #Range of dimensionless frequency
-b=[]
-for i in range(len(a)):
-    b.append(star.g(a[i]*np.sqrt(star.M/star.R**3)))
-    if i%2==0:
-        print(i)
-plt.figure()
-plt.plot(a,b,'+')
-plt.xlabel(r'$\tilde \omega$')
-plt.ylabel(r'g($\tilde \omega$)')
-plt.plot(a,np.zeros(len(a)),'--')
+#Plot the spectrum. A mode corresponds to a zero in the plot
 
+def Spectrum(background,start,end,number):
+    """Plots oscillation spectrum.
+
+    Parameters
+    ----------
+    background: object
+        background star
+        
+    start : float
+        dimensionless omega guess
+        
+    end: float
+        dimensionless omega guess
+        
+    number: int
+        number of points to try in interval
+    """
+    
+    a=np.linspace(start,end,number) #Range of dimensionless frequency
+    b=[]
+    for i in range(len(a)):
+        b.append(background.g(a[i]*np.sqrt(star.M/star.R**3)))
+        if i%2==0:
+            print(i)
+    plt.figure()
+    plt.plot(a,b,'+')
+    plt.xlabel(r'$\tilde \omega$')
+    plt.ylabel(r'g($\tilde \omega$)')
+    plt.plot(a,np.zeros(len(a)),'--')
+
+Spectrum(star,0.3,0.6,10)
 
 #Solve for a mode
 m=mode(star,omega_guess*np.sqrt(star.M/star.R**3))
