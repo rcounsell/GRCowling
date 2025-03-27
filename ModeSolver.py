@@ -6,7 +6,7 @@ Created on Fri Mar 21 15:18:18 2025
 @author: rhyscounsell
 """
 
-import time
+
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import CubicSpline
@@ -14,9 +14,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import root_scalar
 from scipy.interpolate import interp1d
 from scipy.integrate import quad
-import pandas as pd
 
-st=time.time()
 #Units
 eV = 1.602176634e-12 # electron volt [erg]
 
@@ -34,70 +32,6 @@ time_geometric_to_CGS = 3.3356409519815205e-06
 
 pressure_geometric_to_natural=755382.1087233546
 
-class EOS:
-    """SEOS Model.
-
-    Parameters
-    ----------
-    file: .txt or equivalent containing p, epsilon and nb
-        
-    Notes
-    -----
-    Assumes units of MeV and fm
-    """
-    def __init__(self, file):
-        
-        PEs=pd.read_csv(file, sep='\s+',header=None,names=['a','b','c'])
-        
-        eps=PEs['c'] 
-        pres=PEs['b'] 
-        nb=PEs['a']
-        
-        self.eps=eps
-        self.pres=pres
-        self.nb = nb
-        
-        epsGeo=[]
-        presGeo=[]
-        nbGeo=[]
-
-        for i in range(len(eps)):
-            epsGeo.append(eps[i]*eps_MeV_to_CGS/density_geometric_to_CGS)
-            presGeo.append(pres[i]*pres_MeV_to_CGS/pressure_geometric_to_CGS)
-            nbGeo.append(nb[i]*(1e13*length_geometric_to_CGS)**3)
-            
-            
-        self.epsGeo=epsGeo
-        self.presGeo=presGeo
-
-        pofe=interp1d(epsGeo,presGeo,fill_value='extrapolate')
-        self.pofe=pofe
-        
-        eofp=interp1d(presGeo,epsGeo,fill_value='extrapolate')
-        self.eofp=eofp
-        
-        dpdeps=np.gradient(presGeo,epsGeo)
-        dpdepsofp = interp1d(presGeo,dpdeps,fill_value='extrapolate')
-        self.dpdepsofp=dpdepsofp
-        
-        
-        self.nofeps = interp1d(epsGeo,nbGeo,fill_value='extrapolate')
-
-    def PofE(self,eps):
-        PofE=self.pofe(eps)
-        return PofE
-
-    def EofP(self,pres):
-        EofP=self.eofp(pres)
-        return EofP
-    
-    def DpDepsofP(self,pres):
-        DpDepsofP=self.dpdepsofp(pres)
-        return DpDepsofP
-    
-    def Gamma(self,pres):
-        Gamma=(pres+self.EofP(pres))/pres*self.DpDepsofP(pres)
-        return Gamma
 
 class Star:
     """Structure of relativistic star.
@@ -105,7 +39,11 @@ class Star:
     Parameters
     ----------
     eos: object
-        EOS model
+        EOS model with functions:
+        PofE(epsilon) pressure as a function of energy density
+        EofP(p) energy density as a function of pressure
+        Gamma1(p) adiabatic index gamma_1 as a function of pressure
+        DpDepsofP(p) derivative of pressure w.r.t. energy density as a function of pressure
         
     epsc : float
         Energy Denisty [km^-2] at stellar centre
@@ -596,8 +534,6 @@ class mode:
                                                 6*self.Vint(r)**2)
         return TestA
     
-#EOS Model file
-file='/Users/rhyscounsell/Desktop/EOS_files_nsat/803.dat' 
 
 #Generate EOS Model
 eos = EOS(file)
@@ -608,7 +544,6 @@ l=2
 
 #Create background star
 star = Star(eos,epsc,l)
-
 
 #Compactness
 C = star.M/ star.R 
@@ -647,7 +582,6 @@ plt.plot(a,np.zeros(len(a)),'--')
 
 
 #Solve for a mode
-m=mode(star,0.37*np.sqrt(star.M/star.R**3))
+m=mode(star,omega_guess*np.sqrt(star.M/star.R**3))
 
-et=time.time()
-print(et-st)
+
