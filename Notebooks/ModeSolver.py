@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 21 15:18:18 2025
-
-@author: rhyscounsell
-"""
-
-
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import CubicSpline
@@ -353,7 +344,7 @@ class Star:
         eps = self.epsofp(p)
         dpdeps = self.dpdeps(p)
         dnu_dr = 2*(m + 4*np.pi*r**3*p)/(r*(r - 2*m))
-        l = star.l
+        l = self.l
         
         dy_dr = (- (y - 1)*y - (2 + np.exp(lam)*(2*m/r + 4*np.pi*r**2*(p - eps)))*y+ l*(l + 1)*np.exp(lam)
              - 4*np.pi*r**2*np.exp(lam)*(5*eps + 9*p + (eps + p)/(dpdeps))
@@ -535,38 +526,6 @@ class mode:
         return TestA
     
 
-#Generate EOS Model
-eos = EOS(file)
-
-#Set central energy density    
-epsc=9.86e-4 #[km^-2]
-l=2
-
-#Create background star
-star = Star(eos,epsc,l)
-
-#Compactness
-C = star.M/ star.R 
-
-print('C = {}'.format(C))
-
-#Calculate love number k_2
-Sol=solve_ivp(star.k2ODE,[star.r0,star.R],[2],method='BDF', 
- dense_output=True,rtol=1e-11, atol=1e-11)
-Y=Sol.y[0][-1]
-k2 = (8*C**5/5*(1 - 2*C)**2*(2 + 2*C*(Y - 1) - Y)
-   *(2*C*(6 - 3*Y + 3*C*(5*Y - 8))
-     + 4*C**3*(13 - 11*Y + C*(3*Y - 2) + 2*C**2*(1 + Y))
-     + 3*(1 - 2*C)**2*(2 - Y + 2*C*(Y - 1))*np.log(1 - 2*C))**(-1))
-
-print('k\u2082 = {}'.format(k2))
-
-#Dimensionless Tidal Deformability
-DTD = 2/3*k2/(C**5)
-
-print('\u039B = {}'.format(DTD))
-
-
 #Plot the spectrum. A mode corresponds to a zero in the plot
 
 def Spectrum(background,start,end,number):
@@ -590,7 +549,7 @@ def Spectrum(background,start,end,number):
     a=np.linspace(start,end,number) #Range of dimensionless frequency
     b=[]
     for i in range(len(a)):
-        b.append(background.g(a[i]*np.sqrt(star.M/star.R**3)))
+        b.append(background.g(a[i]*np.sqrt(background.M/background.R**3)))
         if i%2==0:
             print(i)
     plt.figure()
@@ -598,10 +557,5 @@ def Spectrum(background,start,end,number):
     plt.xlabel(r'$\tilde \omega$')
     plt.ylabel(r'g($\tilde \omega$)')
     plt.plot(a,np.zeros(len(a)),'--')
-
-Spectrum(star,0.3,0.6,10)
-
-#Solve for a mode
-m=mode(star,omega_guess*np.sqrt(star.M/star.R**3))
 
 
