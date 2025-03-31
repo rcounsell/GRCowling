@@ -22,7 +22,7 @@ import ModeSolver as MS
 import pandas as pd
 
 #Import Gamma_1 as a function of baryon density from file
-BSk22=pd.read_csv("/Users/rhyscounsell/Desktop/BSkGamma/GamBSk22.txt", sep='\s+',header=None,names=['a','b'])
+BSk22=pd.read_csv("EOS/GamBSk22.txt", sep='\s+',header=None,names=['a','b'])
 
 #Coefficients of BSk functionals
 C1_22=[7.02e8,1.133e11,6.19e7,4.54e6,5.46e5,15.24,0.0683,8.86,4611,48.07,2.697,81.7,7.05,1.5]
