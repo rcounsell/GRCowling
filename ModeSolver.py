@@ -223,8 +223,8 @@ class Star:
         Epsilon = self.epsofp(p)
         depsdr  = self.depsdr(r)
         dpdr = self.dpdr(r)
-        gamma = self.eos.Gamma(p)
-        Aplus = np.exp(-self.lam(r)/2)*(depsdr/(p+Epsilon)-dpdr/(gamma*p))
+        gamma1 = self.eos.Gamma1(p)
+        Aplus = np.exp(-self.lam(r)/2)*(depsdr/(p+Epsilon)-dpdr/(gamma1*p))
         return Aplus
     
     def Aminus(self,r):
@@ -232,8 +232,8 @@ class Star:
         Epsilon = self.epsofp(p)
         depsdr  = self.depsdr(r)
         dpdr = self.dpdr(r)
-        gamma = self.eos.Gamma(p)
-        Aminus = np.exp(-self.lam(r)/2)*(depsdr/(p+Epsilon)+dpdr*(2/(p+Epsilon)-1/(gamma*p)))
+        gamma1 = self.eos.Gamma1(p)
+        Aminus = np.exp(-self.lam(r)/2)*(depsdr/(p+Epsilon)+dpdr*(2/(p+Epsilon)-1/(gamma1*p)))
         return Aminus
      
     def f(self, r, Z, omega):
@@ -272,11 +272,11 @@ class Star:
         Am=self.Aminus(r)
         Ap=self.Aplus(r)
         l = self.l
-        Gamma = self.eos.Gamma(p)
+        Gamma1 = self.eos.Gamma1(p)
         omega2 = omega**2
         
         Q = np.array([
-                [v/Gamma - l - 1,l*(l+1)*m*np.exp(lam/2)/(omega2*r**3)-v/(Gamma*beta)], 
+                [v/Gamma1 - l - 1,l*(l+1)*m*np.exp(lam/2)/(omega2*r**3)-v/(Gamma1*beta)], 
                 [np.exp(lam/2)*(omega2*r**3/m+Ap*r*beta),3-u-Am*np.exp(lam/2)*r-l]
                 
         ]) / r
