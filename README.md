@@ -8,7 +8,7 @@ The software is developed using the python programming language.
 
 ## Getting Started
 
-General use of this software is demonstrated in the ModeSolver.py file.
+The general functions are found in the ModeSolver.py file. An example of how to use them is in the Notebooks and can be run using python.
 
 ## Citations
 
