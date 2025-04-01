@@ -1,0 +1,6 @@
+name: GRCowling
+dependencies:
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
