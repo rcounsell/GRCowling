@@ -1,0 +1,124 @@
+"""
+Example of how to solve for oscillation modes in the GR Cowling formalism.
+Here we use the BSk22 equation-of-state and functionals obtained from [1][2]
+We will calculate the frequencies of the f-mode and first two g-modes 
+for a neutron star of mass approx 1.4 solar masses.
+
+[1] Shchechilin N. N., Chamel N., Pearson J. M.; "Unified equations of state for cold nonaccreting neutron stars with 
+    Brussels-Montreal functionals. IV. Role of the symmetry energy in pasta phases", 2023, Phys. Rev. C, 108, 025805
+
+[2] Goriely S., Chamel N., Pearson J. M.;"Further explorations of Skyrme-Hartree-Fock-Bogoliubov mass formulas. XIII. 
+    The 2012 atomic mass evaluation and the symmetry coefficient", 2013, Phys. Rev. C, 88, 024308
+"""
+
+import numpy as np
+from scipy.integrate import solve_ivp
+import ModeSolver as MS
+
+
+pressure_geometric_to_CGS = 1.2102555643382062e+39
+density_geometric_to_CGS = 1.3465909215001088e+18
+mass_geometric_to_CGS = 1.3465909215001088e+33
+BaryonMass = 1.67262192369e-24/mass_geometric_to_CGS
+
+mass_geometric_to_Msol = 0.6772199503624046
+time_geometric_to_CGS = 3.3356409519815205e-06
+
+class EnergyPolytrope:
+    """Polytrope defined with energy density.
+
+    Methods are functions of pressure `p` [km^-2].
+
+    Attributes
+    ----------
+    n : int
+        Polytropic index [dimensionless].
+    K : float
+        Proportionality constant [km^2/n].
+
+    Methods
+    -------
+    epsilon
+    Gamma
+    Gamma1
+    """
+    def __init__(self, n, K, gamma1):
+        self.n = n
+        self.K = K
+        self.gamma1 = gamma1
+
+    def EofP(self, p):
+        """Return energy density [km^-2]."""
+        return (p / self.K)**(self.n/(self.n + 1))
+    
+    def PofE(self, eps):
+        """Return pressure [km^-2]."""
+        return (K*eps**(1+1/self.n))
+
+    def Gamma(self, p):
+        """Return adiabatic index [dimensionless] associated with background.
+        """
+        return (1 + 1/self.n)*(1 + self.K*(p / self.K)**(1/(self.n + 1)))
+
+    def Gamma1(self, p):
+        """Return adiabatic index [dimensionless] associated with
+        perturbations.
+
+        Equation of state is assumed to be barotropic.
+        """
+        return self.gamma1/(1+1/self.n)*self.Gamma(p)
+    
+    def DpDepsofP(self, p):
+        """Return adiabatic index [dimensionless] associated with background.
+        """
+        return (1 + 1/self.n)*(self.K*(p / self.K)**(1/(self.n + 1)))
+    
+#Generate EOS Model
+n, K = 1, 100
+gamma1 = 2.05
+eos = EnergyPolytrope(n, K, gamma1)
+
+#Set central energy density    
+epsc=0.007426160269118666 #[km^-2]
+l=2
+
+#Create background star
+star = MS.Star(eos,epsc,l)
+
+#Compactness
+C = star.M/ star.R 
+
+print('C = {}'.format(C))
+
+#Calculate love number k_2
+Sol=solve_ivp(star.k2ODE,[star.r0,star.R],[2],method='BDF', 
+ dense_output=True,rtol=1e-11, atol=1e-11)
+Y=Sol.y[0][-1]
+k2 = (8*C**5/5*(1 - 2*C)**2*(2 + 2*C*(Y - 1) - Y)
+   *(2*C*(6 - 3*Y + 3*C*(5*Y - 8))
+     + 4*C**3*(13 - 11*Y + C*(3*Y - 2) + 2*C**2*(1 + Y))
+     + 3*(1 - 2*C)**2*(2 - Y + 2*C*(Y - 1))*np.log(1 - 2*C))**(-1))
+
+print('k\u2082 = {}'.format(k2))
+
+#Dimensionless Tidal Deformability
+DTD = 2/3*k2/(C**5)
+
+print('\u039B = {}'.format(DTD))
+
+#Plot the spectrum. A mode corresponds to a zero in the plot
+MS.Spectrum(star,1,1.2,10)
+
+#Solve for a mode
+#First we solve for the f-mode
+m=MS.mode(star,1.15*np.sqrt(star.M/star.R**3))
+
+
+#Now we will look at the low frequency spectrum
+MS.Spectrum(star,0.09,0.14,10)
+
+#Next the first g-mode
+m=MS.mode(star,0.135*np.sqrt(star.M/star.R**3))
+
+#Finally the second g-mode
+m=MS.mode(star,0.092*np.sqrt(star.M/star.R**3))
