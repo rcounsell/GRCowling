@@ -13,13 +13,7 @@ for a neutron star of mass approx 1.4 solar masses.
 
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.interpolate import CubicSpline
-import matplotlib.pyplot as plt
-from scipy.optimize import root_scalar
-from scipy.interpolate import interp1d
-from scipy.integrate import quad
 import ModeSolver as MS
-import pandas as pd
 
 #Import Gamma_1 as a function of baryon density from file
 BSk22=pd.read_csv("EOS/GamBSk22.txt", sep='\s+',header=None,names=['a','b'])
