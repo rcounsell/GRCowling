@@ -1,14 +1,9 @@
 """
 Example of how to solve for oscillation modes in the GR Cowling formalism.
-Here we use the BSk22 equation-of-state and functionals obtained from [1][2]
+Here we use an Energy Density Polytrope
 We will calculate the frequencies of the f-mode and first two g-modes 
-for a neutron star of mass approx 1.4 solar masses.
+for a neutron star of mass approx 1.3 solar masses.
 
-[1] Shchechilin N. N., Chamel N., Pearson J. M.; "Unified equations of state for cold nonaccreting neutron stars with 
-    Brussels-Montreal functionals. IV. Role of the symmetry energy in pasta phases", 2023, Phys. Rev. C, 108, 025805
-
-[2] Goriely S., Chamel N., Pearson J. M.;"Further explorations of Skyrme-Hartree-Fock-Bogoliubov mass formulas. XIII. 
-    The 2012 atomic mass evaluation and the symmetry coefficient", 2013, Phys. Rev. C, 88, 024308
 """
 
 import numpy as np
