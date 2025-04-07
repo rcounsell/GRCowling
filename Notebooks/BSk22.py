@@ -12,6 +12,7 @@ for a neutron star of mass approx 1.4 solar masses.
 """
 
 import numpy as np
+import pandas as pd
 from scipy.integrate import solve_ivp
 import ModeSolver as MS
 
