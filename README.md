@@ -15,13 +15,15 @@ The general functions are found in the ModeSolver.py file. Examples of how to us
 If you found this project to be useful in academic work, please cite it using the following references:
 
 ```bibtex
-@UNPUBLISHED{interface_paper,
-       author = {{Counsell}, A.~R. and {Gittins}, F. and  {Andersson}, N. and {Tews}, I.},
-        title = "{Interface modes in inspiralling neutron stars: A gravitational-wave probe of first-order phase transitions}",
-         note = {in preparation},
-         year = 2025
+@misc{counsell2025interfacemodesinspirallingneutron,
+      title={Interface modes in inspiralling neutron stars: A gravitational-wave probe of first-order phase transitions}, 
+      author={A. R. Counsell and F. Gittins and N. Andersson and I. Tews},
+      year={2025},
+      eprint={2504.06181},
+      archivePrefix={arXiv},
+      primaryClass={gr-qc},
+      url={https://arxiv.org/abs/2504.06181}, 
 }
-
 @ARTICLE{2025MNRAS.536.1967C,
        author = {{Counsell}, A.~R. and {Gittins}, F. and {Andersson}, N. and {Pnigouras}, P.},
         title = "{Neutron star g modes in the relativistic Cowling approximation}",
