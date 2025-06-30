@@ -25,6 +25,7 @@ time_geometric_to_CGS = 3.3356409519815205e-06
 
 pressure_geometric_to_natural=755382.1087233546
 
+#As there may be an interface mode we shall slightly adjust our classes for Star and Mode
 
 class Star:
     """Structure of relativistic star.
